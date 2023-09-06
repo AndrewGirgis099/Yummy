@@ -6,13 +6,7 @@ let ingredientsLink =document.querySelector("#ingredients");
 let contact = document.querySelector("#contact");
 
 let searchName = document.querySelector("#searchName");
-// console.log(searchName)
 let searchLetter = document.querySelector("#searchLetter");
-// console.log(searchLetter)
-
-let nameOfSearch;
-let letterOfSearch;
-// let index = 0;
 
 let nameInput=document.querySelector("#nameInput");
 let emailInput =document.querySelector("#emailInput");
@@ -31,7 +25,6 @@ let catMealsRes;
 let ingredientsMealRes;
 let areaMealsRes;
 
-
 //!events----------------------------------------------------------------------------------------------------
 searchLink.addEventListener("click",async ()=>{
     document.querySelector(".my-search").classList.remove("d-none")
@@ -39,10 +32,6 @@ searchLink.addEventListener("click",async ()=>{
     document.querySelector(".my-main-page").classList.remove("d-none");
     document.querySelector(".my-contact-us").classList.add("d-none")
     document.querySelector(".my-contact-us").classList.add("d-none")
-
-
-
-
 })
 
 categoriesLink.addEventListener("click",()=>{
@@ -50,9 +39,6 @@ categoriesLink.addEventListener("click",()=>{
     document.querySelector(".my-search").classList.add("d-none")
     document.querySelector(".my-main-page").classList.remove("d-none");
     document.querySelector(".my-contact-us").classList.add("d-none")
-
-
-
 })
 
 areaLink.addEventListener("click",()=>{
@@ -60,9 +46,6 @@ areaLink.addEventListener("click",()=>{
     document.querySelector(".my-search").classList.add("d-none")
     document.querySelector(".my-main-page").classList.remove("d-none");
     document.querySelector(".my-contact-us").classList.add("d-none")
-
-
-
 })
 
 ingredientsLink.addEventListener("click",()=>{
@@ -70,27 +53,15 @@ ingredientsLink.addEventListener("click",()=>{
     document.querySelector(".my-search").classList.add("d-none")
     document.querySelector(".my-main-page").classList.remove("d-none");
     document.querySelector(".my-contact-us").classList.add("d-none")
-
-
-
 })
 
-// document.body.addEventListener("click",function(e){
-//     console.log(e.target)
-// })
-
 document.querySelector("#searchName").addEventListener("input",function(){
-    //console.log(this.value)
-    getRandomMeal(this.value)
+    getHomeMeal(this.value)
     document.querySelector(".my-main-page").classList.remove("d-none");
     document.querySelector(".my-contact-us").classList.add("d-none")
-
-
-
 })
 
 document.querySelector("#searchLetter").addEventListener("input",function(){
-       console.log(this.value)
        searchByLetterApi(this.value)
        document.querySelector(".my-main-page").classList.remove("d-none");
 
@@ -114,15 +85,10 @@ function validation(regex,input){
     if(regex.test(input.value)){
         input.classList.add("is-valid");
         input.classList.remove("is-invalid");
-        console.log("right")
-        // input.parentElement.nextElementSibling.classList.add("d-none") ;
-
         return true;
     }else{
         input.classList.add("is-invalid");
         input.classList.remove("is-valid");
-        console.log("wrong")
-        // input.parentElement.nextElementSibling.classList.remove("d-none") ;
         return false;
     }
 }
@@ -176,16 +142,11 @@ passInput.addEventListener("input",function(){
 rePassword.addEventListener("input",function(){
     if(passInput.value == rePassword.value){
         document.querySelector(".rePass-validation").classList.add("d-none")
-        console.log("hi")
     }
     else{
         document.querySelector(".rePass-validation").classList.remove("d-none")
-        console.log("gggg")
     }
 })
-
-
-
 
 
 const contactInputs = document.querySelectorAll(".contact-input");
@@ -212,62 +173,97 @@ contactInputs.forEach(contactInputs => {
 
 
 
-
+let tag1;
+function tagesForDettals(tag1) {
+    if (tag1 == null || tag1 == undefined || tag1 == "null") {
+      return '<p class="type d-none"></p>';
+    } else {
+      return `<p class="type">${tag1}</p>`;
+    }
+  }
 
 async function getRandomMeal(search=""){
 
 
-    console.log(search)
-    res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${search}`);
-    res= await res.json();
-    console.log("before hpmrMeals")
-    console.log(  res.meals[0].strMeal);
-    displayHomePage(res.meals[0].strMeal);
+    resp = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${search}`);
+    resp= await resp.json();
 
+    let tags =String(resp.meals[0].strTags);
+    let tag = tags.split(",");
+    tag1 = tag[0];
+    
 
+    let  cartona = `
+    <div class="container detealsPage my-4">
+    <div class="row ps-3">
+        <div class="col-lg-4 text-white">
+            <img src="${resp.meals[0].strMealThumb}" class="w-100 rounded-3" alt="">
+            <h2 class="mt-1">${resp.meals[0].strMeal}</h2>
+        </div>
+        <div class="col-lg-8 text-white">
+            <h2 class="fw-bold">Instructions</h2>
+            <p>${resp.meals[0].strInstructions}</p>
+
+            <p class="fs-3 fw-bold">Area : <span class="fw-medium">${resp.meals[0].strArea}</span></p>
+            <p class="fs-3 fw-bold">Category : <span class="fw-medium">${resp.meals[0].strCategory}</span></p>
+            <p class="fs-3 fw-medium" >Recipes :</p>
+            
+            
+            <ul class="list-unstyled d-flex flex-wrap ingrad-list gap-4">
+                ${ingradList(resp.meals[0]) }
+            </ul>
+
+            <p class="fs-3 fw-medium" >Tags : </p>
+            <div class="tages">
+            ${tagesForDettals(tag1)}
+            </div>
+            <ul class="list-unstyled d-flex ingradSrc gap-2">
+                <li class="scr"> <a href="${resp.meals[0].strSource}" target="_blank" class="text-decoration-none text-white">Source</a></li>
+                <li class="yout"><a href="${resp.meals[0].strYoutube}" target="_blank" class="text-decoration-none text-white">Youtube</a></li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+        `;
+    document.querySelector(".my-row").innerHTML=cartona;
 }
 
 
+async function getHomeMeal(search=""){
 
-async function getHomeMeal(){
 
-
-    console.log(search)
-    res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=`);
+    res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${search}`);
     res= await res.json();
-    // console.log(  res.meals);
     displayHomePage(res.meals);
 
 }
 
+getHomeMeal()
 
 
 
 async function searchByLetterApi(search){
     letterRes = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${search}`)
     letterRes = await letterRes.json();
-    // console.log(letterRes.meals);
     displaySearchByLetterPage(letterRes.meals)
 }
 
 async function categoryMealApi(category){
     catMealsRes = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`)
     catMealsRes = await catMealsRes.json();
-    // console.log(catMealsRes.meals);
     displayInnerCategory(catMealsRes.meals)
 }
 
 async function ingredientsMealResMealApi(ingredient){      
     ingredientsMealRes=await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`);
     ingredientsMealRes = await ingredientsMealRes.json();
-    // console.log(ingredientsMealRes.meals)
     displayInnerIngrad(ingredientsMealRes.meals)
 }
 
 async function areaMealsApi(area){
     areaMealsRes=await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`);
     areaMealsRes = await areaMealsRes.json();
-    // console.log(areaMealsRes.meals)
     displayInnerArea(areaMealsRes.meals)
 }
 
@@ -275,21 +271,18 @@ async function areaMealsApi(area){
 async function grtCategoryApi(){
     response =  await fetch("https://www.themealdb.com/api/json/v1/1/categories.php");
     response = await response.json();
-    // console.log(response.categories)
     displayCategoryPage(response.categories)
 }
 
 async function getAreaApi(){
     areaRes =  await fetch("https://www.themealdb.com/api/json/v1/1/list.php?a=list");
     areaRes = await areaRes.json();
-    // console.log(areaRes.meals)
     displayAreaPage(areaRes.meals)
 }
 
 async function getIngredientsApi(){
     ingredRes =  await fetch("https://www.themealdb.com/api/json/v1/1/list.php?i=list");
     ingredRes = await ingredRes.json();
-    // console.log(ingredRes.meals)
     displayIngredientsPage(ingredRes.meals)
     
 }
@@ -355,7 +348,7 @@ function displayInnerCategory(){
     let cartona="";
     for(let i = 0 ; i<catMealsRes.meals.length; i++ ){
         cartona+=`
-        <div class="col-lg-3 col-md-6 position-relative overflow-hidden meal" onclick="displayDetailsCategory ('${catMealsRes.meals[i].strMeal }')">
+        <div class="col-lg-3 col-md-6 position-relative overflow-hidden meal" onclick="getRandomMeal('${catMealsRes.meals[i].strMeal}')">
         <div>
             <img src="${catMealsRes.meals[i].strMealThumb}" class="w-100 rounded-3" alt="">
         </div>
@@ -373,7 +366,7 @@ function displayInnerIngrad(){
     let cartona="";
     for(let i = 0 ; i<ingredientsMealRes.meals.length; i++ ){
         cartona+=`
-        <div class="col-lg-3 col-md-6 position-relative overflow-hidden meal" onclick="displayDetailsIngrad ('${ingredientsMealRes.meals[i].strMeal }')">
+        <div class="col-lg-3 col-md-6 position-relative overflow-hidden meal" onclick="getRandomMeal ('${ingredientsMealRes.meals[i].strMeal }')">
         <div>
             <img src="${ingredientsMealRes.meals[i].strMealThumb}" class="w-100 rounded-3" alt="">
         </div>
@@ -390,7 +383,7 @@ function displayInnerArea(){
     let cartona="";
     for(let i = 0 ; i<areaMealsRes.meals.length; i++ ){
         cartona+=`
-        <div class="col-lg-3 col-md-6 position-relative overflow-hidden meal" onclick="displayDetailsArea ('${areaMealsRes.meals[i].strMeal }')">
+        <div class="col-lg-3 col-md-6 position-relative overflow-hidden meal" onclick="getRandomMeal ('${areaMealsRes.meals[i].strMeal }')">
         <div>
             <img src="${areaMealsRes.meals[i].strMealThumb}" class="w-100 rounded-3" alt="">
         </div>
@@ -442,28 +435,18 @@ function displayIngredientsPage(arr){
 
 
 
-getHomeMeal()
 
-let tag1;
-function tagesForDettals(tag1) {
-    if (tag1 == null || tag1 == undefined || tag1 == "null") {
-      return '<p class="type d-none"></p>';
-    } else {
-      return `<p class="type">${tag1}</p>`;
-    }
-  }
+
 
 
 function displayDetailsPage (i){
 
     let tags =String(res.meals[i].strTags);
     let tag = tags.split(",");
-    tag1 = tag[0];
-    // console.log(tag1)
-    
+    tag1 = tag[0];    
 
     let  cartona = `
-    <div class="container detealsPage my-1">
+    <div class="container detealsPage my-4">
     <div class="row ps-3">
         <div class="col-lg-4 text-white">
             <img src="${res.meals[i].strMealThumb}" class="w-100 rounded-3" alt="">
@@ -495,15 +478,12 @@ function displayDetailsPage (i){
 
 </div>
         `;
-    
-
     document.querySelector(".my-row").innerHTML=cartona;
-
 }
 
 function displayDetailsSearchLetter (i){
     let  cartona = `
-    <div class="container detealsPage my-1">
+    <div class="container detealsPage my-4">
     <div class="row ps-3">
         <div class="col-lg-4 text-white">
             <img src="${letterRes.meals[i].strMealThumb}" class="w-100 rounded-3" alt="">
@@ -540,24 +520,6 @@ function displayDetailsSearchLetter (i){
 
 }
 
-
-let searchedCategory;
-function displayDetailsCategory (search){
-    searchedCategory =    getRandomMeal(search);
-}
-
-
-let searchedIngrad;
-function displayDetailsIngrad (search){
-    searchedIngrad=getRandomMeal(search)
-}
-
-let searchedAreaMeal;
-function displayDetailsArea (search){
-    searchedAreaMeal=getRandomMeal(search);
-}
-
-
 function ingradList(meal) {
     let ingredientList = "";
     for (let i = 1; i <= 20; i++) {
@@ -569,7 +531,6 @@ function ingradList(meal) {
     }
     return ingredientList;
 }
-
 
 //!jQuery---------------------------------------------------------------------------------------------------------
 $(".open").click(()=>{
@@ -623,4 +584,3 @@ $("#searchName").click(function(){
 });
 
 /******************************************************************************* */
-
