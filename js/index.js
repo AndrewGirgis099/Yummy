@@ -32,6 +32,13 @@ searchLink.addEventListener("click",async ()=>{
     document.querySelector(".my-main-page").classList.remove("d-none");
     document.querySelector(".my-contact-us").classList.add("d-none")
     document.querySelector(".my-contact-us").classList.add("d-none")
+
+    $("nav").removeClass("nav-in")
+    $("nav").addClass("nav-out")
+    $(".nav-top-links").removeClass("animate__fadeInDown")
+    $(".nav-top-links").addClass("animate__fadeOutUp")
+    $(".close").addClass("d-none")
+    $(".open").removeClass("d-none")
 })
 
 categoriesLink.addEventListener("click",()=>{
@@ -39,6 +46,13 @@ categoriesLink.addEventListener("click",()=>{
     document.querySelector(".my-search").classList.add("d-none")
     document.querySelector(".my-main-page").classList.remove("d-none");
     document.querySelector(".my-contact-us").classList.add("d-none")
+
+    $("nav").removeClass("nav-in")
+    $("nav").addClass("nav-out")
+    $(".nav-top-links").removeClass("animate__fadeInDown")
+    $(".nav-top-links").addClass("animate__fadeOutUp")
+    $(".close").addClass("d-none")
+    $(".open").removeClass("d-none")
 })
 
 areaLink.addEventListener("click",()=>{
@@ -46,6 +60,13 @@ areaLink.addEventListener("click",()=>{
     document.querySelector(".my-search").classList.add("d-none")
     document.querySelector(".my-main-page").classList.remove("d-none");
     document.querySelector(".my-contact-us").classList.add("d-none")
+
+    $("nav").removeClass("nav-in")
+    $("nav").addClass("nav-out")
+    $(".nav-top-links").removeClass("animate__fadeInDown")
+    $(".nav-top-links").addClass("animate__fadeOutUp")
+    $(".close").addClass("d-none")
+    $(".open").removeClass("d-none")
 })
 
 ingredientsLink.addEventListener("click",()=>{
@@ -53,6 +74,13 @@ ingredientsLink.addEventListener("click",()=>{
     document.querySelector(".my-search").classList.add("d-none")
     document.querySelector(".my-main-page").classList.remove("d-none");
     document.querySelector(".my-contact-us").classList.add("d-none")
+
+    $("nav").removeClass("nav-in")
+    $("nav").addClass("nav-out")
+    $(".nav-top-links").removeClass("animate__fadeInDown")
+    $(".nav-top-links").addClass("animate__fadeOutUp")
+    $(".close").addClass("d-none")
+    $(".open").removeClass("d-none")
 })
 
 document.querySelector("#searchName").addEventListener("input",function(){
@@ -72,6 +100,12 @@ contact.addEventListener("click",()=>{
     document.querySelector(".my-main-page").classList.add("d-none");
     document.querySelector(".my-search").classList.add("d-none")
 
+    $("nav").removeClass("nav-in")
+    $("nav").addClass("nav-out")
+    $(".nav-top-links").removeClass("animate__fadeInDown")
+    $(".nav-top-links").addClass("animate__fadeOutUp")
+    $(".close").addClass("d-none")
+    $(".open").removeClass("d-none")
 })
 
 //!regex-----------------------------------------------------------------------------
@@ -168,10 +202,7 @@ contactInputs.forEach(contactInputs => {
     contactInputs.addEventListener("input", checkInputs);
 });
 
-
 //!Functions--------------------------------------------------------------------------------------------------
-
-
 
 let tag1;
 function tagesForDettals(tag1) {
@@ -194,7 +225,7 @@ async function getRandomMeal(search=""){
     
 
     let  cartona = `
-    <div class="container detealsPage my-4">
+    <div class="container detealsPage py-4">
     <div class="row ps-3">
         <div class="col-lg-4 text-white">
             <img src="${resp.meals[0].strMealThumb}" class="w-100 rounded-3" alt="">
@@ -288,7 +319,6 @@ async function getIngredientsApi(){
 }
 
 
-
 function displayHomePage(arr){
     let cartona="";
     for(let i = 0 ; i<res.meals.length; i++ ){
@@ -322,10 +352,17 @@ function displaySearchByLetterPage(arr){
     document.querySelector(".my-row").innerHTML=cartona;
 }
 
-
 function displayCategoryPage(arr){
     let cartona="";
-    for(let i = 0 ; i<response.categories.length; i++ ){
+            for(let i = 0 ; i<response.categories.length; i++ ){
+            let paragraph = response.categories[i].strCategoryDescription;
+            let newParagraph=paragraph.slice(0,75);
+            if(paragraph.length>200){
+            newParagraph= newParagraph+"...";
+            }
+            else{
+            newParagraph= newParagraph;
+            }
         cartona+=`
         <div class="col-lg-3 col-md-6 position-relative overflow-hidden meal" onclick="categoryMealApi ('${response.categories[i].strCategory}')">
         <div>
@@ -333,7 +370,7 @@ function displayCategoryPage(arr){
         </div>
         <div class="overlay position-absolute rounded-3 overflow-hidden d-flex flex-column justify-content-center align-items-center ">
             <span class="fs-3 fw-medium mx-2">${response.categories[i].strCategory}</span>
-            <p class="categoryDDesc mx-3  text-center"> ${response.categories[i].strCategoryDescription}</p>
+            <p class="categoryDDesc mx-3  text-center"> ${newParagraph}</p>
             
         </div>
     </div>
@@ -414,7 +451,6 @@ function displayAreaPage(arr){
 }
 
 
-
 function displayIngredientsPage(arr){
     let cartona="";
     for(let i = 0 ; i<20; i++ ){
@@ -435,10 +471,6 @@ function displayIngredientsPage(arr){
 
 
 
-
-
-
-
 function displayDetailsPage (i){
 
     let tags =String(res.meals[i].strTags);
@@ -446,7 +478,7 @@ function displayDetailsPage (i){
     tag1 = tag[0];    
 
     let  cartona = `
-    <div class="container detealsPage my-4">
+    <div class="container detealsPage py-4">
     <div class="row ps-3">
         <div class="col-lg-4 text-white">
             <img src="${res.meals[i].strMealThumb}" class="w-100 rounded-3" alt="">
@@ -483,7 +515,7 @@ function displayDetailsPage (i){
 
 function displayDetailsSearchLetter (i){
     let  cartona = `
-    <div class="container detealsPage my-4">
+    <div class="container detealsPage py-4">
     <div class="row ps-3">
         <div class="col-lg-4 text-white">
             <img src="${letterRes.meals[i].strMealThumb}" class="w-100 rounded-3" alt="">
